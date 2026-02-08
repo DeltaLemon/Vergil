@@ -70,13 +70,20 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* ===== 页脚样式 ===== */
+               /* ===== 页脚样式 ===== */
         footer {
             background-color: var(--bg-white);
             color: var(--text-primary);
             padding: 70px 0 30px;
+
+            width: 100%; /* 确保宽度100% */
+            /* 移除或注释掉可能限制宽度的属性，例如 max-width */
+            /* max-width: 1200px; */
+            margin-left: 0;
+            margin-right: 0;
+            
         }
-        
+   
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -147,7 +154,7 @@
         .sidebar-list {
             list-style: none;
         }
-        
+ 
         .sidebar-list li {
             margin-bottom: 0.75rem;
             position: relative;
@@ -421,8 +428,8 @@
             transform: translateY(-50%);
             color: var(--text-secondary);
         }
-        
 
+        
         /* ===== 响应式设计 ===== */
         @media (max-width: 768px) {
             .portal-grid {
@@ -637,7 +644,7 @@
                 </div>
             </div>
             </main>
-
+ </div>
     <!-- 页脚 -->
      <footer>
         <div class="container">
