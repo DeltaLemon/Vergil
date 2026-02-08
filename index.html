@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Redirect Service | 二维码重定向服务</title>
+    <!-- 
+        说明: 这是一个完全独立的HTML文件，无任何外部依赖
+        适用于GitHub Pages部署，设计简约现代，参考产品官网风格
+    -->
+    <style>
+        /* ===== 全局样式重置与基础设置 ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        :root {
+            /* CSS变量定义 - 方便统一修改主题色 */
+            --primary-color: #2563eb;      /* 主色调 - 科技蓝 */
+            --primary-dark: #1d4ed8;       /* 主色调深色 */
+            --text-primary: #1f2937;       /* 主要文字颜色 */
+            --text-secondary: #6b7280;     /* 次要文字颜色 */
+            --bg-light: #f9fafb;           /* 浅色背景 */
+            --bg-white: #ffffff;           /* 白色背景 */
+            --border-color: #e5e7eb;       /* 边框颜色 */
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* 阴影效果 */
+            --transition: all 0.3s ease;   /* 过渡动画 */
+        }
+        
+        body {
+            color: var(--text-primary);
+            line-height: 1.6;
+            background-color: var(--bg-white);
+            overflow-x: hidden; /* 防止横向滚动 */
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px; /* 最大宽度限制，保证大屏幕上不会过宽 */
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* ===== 按钮通用样式 ===== */
+        .btn {
+            display: inline-block;
+            padding: 12px 28px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px); /* 悬停时轻微上移效果 */
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* ===== 导航栏样式 ===== */
+        header {
+            position: fixed; /* 固定导航栏 */
+            top: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95); /* 半透明背景 */
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 18px 0;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between; /* 左右布局 */
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: var(--primary-color);
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px; /* 链接之间的间距 */
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .mobile-menu-btn {
+            display: none; /* 默认隐藏，移动端显示 */
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        
+        /* ===== 主内容区样式 ===== */
+        main {
+            margin-top: 80px; /* 为固定导航栏留出空间 */
+        }
+        
+        /* 英雄区域 - 页面最显眼的横幅区域 */
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); /* 渐变背景 */
+            border-radius: 0 0 30px 30px; /* 底部圆角 */
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap; /* 小屏幕上按钮换行 */
+        }
+        
+        /* 特性展示区域 */
+        .features {
+            padding: 100px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 60px;
+            font-size: 1.1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 响应式网格 */
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 40px 30px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px); /* 悬停上浮效果 */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: #dbeafe; /* 浅蓝色背景 */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        /* CTA区域 - 行动号召区域 */
+        .cta {
+            padding: 100px 0;
+            background-color: var(--bg-light);
+            text-align: center;
+            border-radius: 30px;
+        }
+        
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        /* ===== 页脚样式 ===== */
+        footer {
+            background-color: var(--text-primary);
+            color: white;
+            padding: 70px 0 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px; /* 悬停左移效果 */
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #374151;
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+        
+        /* ===== 响应式设计 - 移动端适配 ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+                padding: 0 15px;
+            }
+            
+            .nav-links {
+                display: none; /* 移动端隐藏导航链接 */
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-top: 1px solid var(--border-color);
+            }
+            
+            .nav-links.active {
+                display: flex; /* 激活时显示 */
+            }
+            
+            .mobile-menu-btn {
+                display: block; /* 移动端显示菜单按钮 */
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr; /* 移动端单列布局 */
+                padding: 0 15px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column; /* 移动端按钮垂直排列 */
+                align-items: center;
+            }
+            
+            .hero-buttons .btn {
+                width: 90%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        导航栏部分
+        说明: 固定顶部的导航栏，包含Logo和导航链接
+        移动端有菜单切换功能
+    -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">
+                    <span class="logo-icon"></span>
+                    QR Redirect
+                </a>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    ☰ <!-- 汉堡菜单图标 -->
+                </button>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#features">功能特性</a></li>
+                    <li><a href="#how-it-works">工作原理</a></li>
+                    <li><a href="#pricing">定价</a></li>
+                    <li><a href="#docs">文档</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- 
+            英雄区域
+            说明: 这是页面的首要视觉焦点，包含主要标题和行动号召按钮
+            设计采用大字体和渐变背景吸引注意力
+        -->
+        <section class="hero">
+            <div class="container">
+                <h1>智能二维码重定向服务</h1>
+                <p>
+                    一个固定二维码，无限重定向可能。轻松管理您的所有二维码跳转目标，
+                    无需更改印刷物，实时更新指向任何URL。专为营销活动、产品手册和数字内容分发设计。
+                </p>
+                <div class="hero-buttons">
+                    <a href="#signup" class="btn">免费开始使用</a>
+                    <a href="#demo" class="btn btn-outline">查看演示</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            功能特性区域
+            说明: 展示产品的核心功能，使用卡片式设计，每项功能有图标和描述
+            悬停时有上浮效果增强交互感
+        -->
+        <section class="features" id="features">
+            <div class="container">
+                <h2 class="section-title">核心功能</h2>
+                <p class="section-subtitle">
+                    我们提供强大而灵活的二维码重定向解决方案，满足各种业务场景需求
+                </p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🔗</div>
+                        <h3>一次性部署</h3>
+                        <p>印刷一个永久二维码，后台随时更改跳转目标。无需重新打印或张贴新码。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>访问统计</h3>
+                        <p>实时追踪扫描次数、地理位置、设备类型等数据，帮助您了解受众行为。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>高速跳转</h3>
+                        <p>全球CDN加速，确保用户扫描后毫秒级跳转，提供流畅的用户体验。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h3>安全可靠</h3>
+                        <p>HTTPS加密传输，防恶意劫持。支持访问密码保护和有效期设置。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h3>自定义设计</h3>
+                        <p>自定义二维码颜色、样式和logo嵌入，与您的品牌视觉识别系统保持一致。</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h3>A/B测试</h3>
+                        <p>为同一二维码设置多个跳转目标，根据规则分配流量，优化转化率。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+            行动号召区域
+            说明: 页面末尾的关键行动区域，鼓励用户注册或试用
+            使用对比色背景突出显示
+        -->
+        <section class="cta" id="signup">
+            <div class="container">
+                <h2>立即开始使用免费服务</h2>
+                <p>
+                    无需信用卡，立即注册即可享受基础版免费套餐。<br>
+                    包含每月1000次扫描、基础统计功能和5个动态二维码。
+                </p>
+                <a href="#" class="btn" style="padding: 15px 40px; font-size: 1.1rem;">创建免费账户</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- 
+        页脚部分
+        说明: 包含网站链接、联系信息和版权声明
+        设计为深色背景，与主要内容形成对比
+    -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>QR Redirect</h3>
+                    <p style="color: #d1d5db; margin-top: 15px;">
+                        专业的二维码重定向服务平台，帮助您高效管理数字到物理世界的连接。
+                    </p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>产品</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">功能</a></li>
+                        <li><a href="#pricing">定价</a></li>
+                        <li><a href="#api">API接口</a></li>
+                        <li><a href="#changelog">更新日志</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>资源</h3>
+                    <ul class="footer-links">
+                        <li><a href="#docs">文档</a></li>
+                        <li><a href="#tutorials">教程</a></li>
+                        <li><a href="#blog">博客</a></li>
+                        <li><a href="#faq">常见问题</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>联系</h3>
+                    <ul class="footer-links">
+                        <li><a href="#contact">联系我们</a></li>
+                        <li><a href="#support">技术支持</a></li>
+                        <li><a href="#twitter">Twitter</a></li>
+                        <li><a href="#github">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 QR Redirect 服务. 保留所有权利. | 遵循 MIT 开源许可证</p>
+                <p style="margin-top: 10px;">此页面为静态示例，部署于GitHub Pages</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 
+        JavaScript部分
+        说明: 最小化的交互脚本，仅处理移动端菜单切换
+        所有代码内联，无外部依赖
+    -->
+    <script>
+        // DOM加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取移动端菜单按钮和导航链接元素
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const navLinks = document.getElementById('navLinks');
+            
+            // 移动端菜单切换功能
+            mobileMenuBtn.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+                
+                // 切换菜单图标
+                if (navLinks.classList.contains('active')) {
+                    mobileMenuBtn.textContent = '✕'; // 打开状态显示"X"
+                } else {
+                    mobileMenuBtn.textContent = '☰'; // 关闭状态显示汉堡图标
+                }
+            });
+            
+            // 点击导航链接后关闭移动端菜单（移动端适用）
+            const navItems = document.querySelectorAll('.nav-links a');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        navLinks.classList.remove('active');
+                        mobileMenuBtn.textContent = '☰';
+                    }
+                });
+            });
+            
+            // 平滑滚动到锚点链接
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    // 排除"#"链接
+                    if (href === '#') return;
+                    
+                    e.preventDefault();
+                    const targetElement = document.querySelector(href);
+                    
+                    if (targetElement) {
+                        // 计算滚动位置（考虑固定导航栏高度）
+                        const headerHeight = document.querySelector('header').offsetHeight;
+                        const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth' // 平滑滚动效果
+                        });
+                    }
+                });
+            });
+            
+            // 控制台欢迎信息（可选，部署时可移除）
+            console.log('QR Redirect 首页已加载 | 设计：简约现代风格 | 托管：GitHub Pages');
+        });
+    </script>
+</body>
+</html>
