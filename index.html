@@ -3,29 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[您的姓名/项目名称] | 个人空间</title>
+    <title>导航中心 | 首页</title>
     <!-- 
-        说明: 这是一个通用的个人/项目介绍网站模板
-        设计简约中性，模块化结构便于内容填充
-        完全独立，无外部依赖，适合GitHub Pages部署
+        说明: Wiki风格导航门户网站
+        专用于跳转到各个子页面/功能模块
+        所有具体内容用"*******"占位，列表项前添加序号
     -->
     <style>
-        /* ===== CSS变量定义 - 可轻松更换主题 ===== */
+        /* ===== CSS变量定义 (与之前保持一致) ===== */
         :root {
-            --primary-color: #4f46e5;      /* 主色调 - 靛蓝色，沉稳专业 */
+            --primary-color: #4f46e5;
             --primary-dark: #4338ca;
             --primary-light: #e0e7ff;
-            --text-primary: #111827;       /* 主要文字颜色 */
-            --text-secondary: #6b7280;     /* 次要文字颜色 */
-            --bg-light: #f9fafb;           /* 浅色背景 */
-            --bg-white: #ffffff;           /* 白色背景 */
-            --border-color: #e5e7eb;       /* 边框颜色 */
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
             --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --transition: all 0.3s ease;
         }
         
-        /* 深色主题变量 (备用) */
         .dark-theme {
             --primary-color: #818cf8;
             --primary-dark: #6366f1;
@@ -36,7 +35,7 @@
             --border-color: #374151;
         }
         
-        /* ===== 基础样式重置 ===== */
+        /* ===== 基础样式 ===== */
         * {
             margin: 0;
             padding: 0;
@@ -58,79 +57,252 @@
             padding: 0 20px;
         }
         
-        /* ===== 布局组件 ===== */
-        .section {
-            padding: 80px 0;
+        /* ===== Wiki特有布局组件 ===== */
+        .wiki-container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            margin-top: 30px;
         }
         
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
+        @media (max-width: 992px) {
+            .wiki-container {
+                grid-template-columns: 1fr;
+            }
         }
         
-        .section-subtitle {
-            color: var(--text-secondary);
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            font-size: 1.1rem;
-        }
-        
-        /* 卡片组件 */
-        .card {
+        /* 侧边栏 - Wiki风格目录 */
+        .wiki-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
             background: var(--bg-white);
             border-radius: 12px;
-            padding: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
             box-shadow: var(--card-shadow);
+        }
+        
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar-section h3 {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+        
+        .sidebar-list {
+            list-style: none;
+        }
+        
+        .sidebar-list li {
+            margin-bottom: 0.75rem;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .sidebar-list li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        
+        .sidebar-list li:hover::before {
+            color: var(--primary-color);
+            transform: translateX(3px);
+        }
+        
+        .sidebar-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            display: block;
+            padding: 0.25rem 0;
+        }
+        
+        .sidebar-list a:hover {
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+        
+        /* 主内容区 - 门户布局 */
+        .wiki-main {
+            min-height: 80vh;
+        }
+        
+        .wiki-header {
+            background: linear-gradient(135deg, var(--primary-light) 0%, #f0f9ff 100%);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        
+        .wiki-header h1 {
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .wiki-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* 门户卡片网格 */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+        
+        .portal-card {
+            background: var(--bg-white);
+            border-radius: 12px;
+            padding: 1.75rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .portal-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--primary-color);
+        }
+        
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+        }
+        
+        .portal-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+        
+        .portal-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        /* 索引列表样式 */
+        .index-list {
+            background: var(--bg-light);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+        
+        .index-section {
+            margin-bottom: 2rem;
+        }
+        
+        .index-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .index-section h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .index-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .index-item {
+            padding: 1rem;
+            background: var(--bg-white);
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             transition: var(--transition);
         }
         
-        .card:hover {
-            box-shadow: var(--hover-shadow);
-            transform: translateY(-4px);
+        .index-item:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
         }
         
-        /* 按钮样式 */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.75rem 1.5rem;
-            background-color: var(--primary-color);
-            color: white;
+        /* 页内跳转锚点 */
+        .page-anchors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 2rem 0;
+        }
+        
+        .anchor-tag {
+            padding: 0.5rem 1rem;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 20px;
             text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
+            font-size: 0.9rem;
             transition: var(--transition);
-            gap: 8px;
         }
         
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
+        .anchor-tag:hover {
+            background: var(--primary-color);
+            color: white;
         }
         
-        .btn-outline {
-            background-color: transparent;
-            border: 2px solid var(--primary-color);
+        /* 面包屑导航 */
+        .breadcrumb {
+            padding: 1rem 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb a:hover {
             color: var(--primary-color);
         }
         
-        .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: white;
+        .breadcrumb span {
+            margin: 0 0.5rem;
+            color: var(--text-secondary);
         }
         
-        /* ===== 头部与导航 ===== */
+        /* ===== 头部与导航 (调整) ===== */
         header {
-            position: fixed;
+            position: sticky;
             top: 0;
-            width: 100%;
             background-color: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             z-index: 1000;
@@ -138,635 +310,418 @@
             padding: 1rem 0;
         }
         
-        nav {
+        .main-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
-        .logo {
-            font-size: 1.5rem;
+        .portal-logo {
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--text-primary);
             text-decoration: none;
-        }
-        
-        .logo-accent {
-            color: var(--primary-color);
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--primary-color);
-        }
-        
-        /* 主题切换按钮 */
-        .theme-toggle {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 1.2rem;
-            padding: 0.5rem;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-        
-        .theme-toggle:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-        }
-        
-        /* ===== 主要内容区域 ===== */
-        main {
-            margin-top: 80px;
-        }
-        
-        /* 个人简介区域 */
-        .intro {
-            padding: 120px 0 80px;
-            text-align: center;
-        }
-        
-        .avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin: 0 auto 2rem;
-            background-color: var(--primary-light);
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            color: var(--primary-color);
-            border: 4px solid white;
-            box-shadow: var(--card-shadow);
+            gap: 10px;
         }
         
-        .intro h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-        
-        .intro p {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            max-width: 700px;
-            margin: 0 auto 2rem;
-        }
-        
-        /* 项目/作品展示 */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .project-card .card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .project-icon {
-            width: 48px;
-            height: 48px;
-            background-color: var(--primary-light);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-size: 1.5rem;
-        }
-        
-        /* 技能/技术栈 */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-        
-        .skill-tag {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .skill-tag:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* 时间线/经历 */
-        .timeline {
-            position: relative;
-            max-width: 800px;
-            margin: 3rem auto 0;
-        }
-        
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 30px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background-color: var(--border-color);
-        }
-        
-        .timeline-item {
-            position: relative;
-            padding-left: 70px;
-            margin-bottom: 2.5rem;
-        }
-        
-        .timeline-date {
-            position: absolute;
-            left: 0;
-            top: 0;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 15px;
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        
-        /* 联系表单 */
-        .contact-form {
-            max-width: 600px;
-            margin: 3rem auto 0;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border-color);
+        .portal-logo .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-color);
             border-radius: 8px;
-            background-color: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .quick-access {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-light);
             color: var(--text-primary);
-            font-size: 1rem;
+            font-size: 0.95rem;
+            width: 200px;
             transition: var(--transition);
         }
         
-        .form-control:focus {
+        .search-box input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            width: 250px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
         }
         
         /* ===== 页脚 ===== */
-        footer {
-            background-color: var(--bg-light);
-            padding: 3rem 0 1.5rem;
-            margin-top: 3rem;
+        .wiki-footer {
+            background: var(--bg-light);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border-color);
         }
         
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .social-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: var(--bg-white);
-            border-radius: 50%;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: var(--transition);
-        }
-        
-        .social-link:hover {
-            background-color: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
         }
         
         /* ===== 响应式设计 ===== */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--bg-white);
-                flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-                border-top: 1px solid var(--border-color);
-            }
-            
-            .nav-links.active {
-                display: flex;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                color: var(--text-primary);
-                cursor: pointer;
-            }
-            
-            .intro h1 {
-                font-size: 2.5rem;
-            }
-            
-            .projects-grid {
+            .portal-grid {
                 grid-template-columns: 1fr;
             }
             
-            .timeline::before {
-                left: 20px;
+            .index-items {
+                grid-template-columns: 1fr;
             }
             
-            .timeline-item {
-                padding-left: 50px;
+            .quick-access {
+                display: none;
             }
+            
+            .wiki-header h1 {
+                font-size: 2rem;
+            }
+            
+            .wiki-header {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* 占位符特殊样式 */
+        .placeholder {
+            color: var(--text-secondary);
+            background: var(--bg-light);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            letter-spacing: 1px;
+        }
+        
+        .numbered-list {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+        }
+        
+        .numbered-list li {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .numbered-list li::marker {
+            color: var(--primary-color);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <!-- 头部导航 -->
+    <!-- 主头部 -->
     <header>
         <div class="container">
-            <nav>
-                <a href="#" class="logo">Your<span class="logo-accent">Space</span></a>
+            <nav class="main-nav">
+                <a href="#" class="portal-logo">
+                    <div class="logo-icon">P</div>
+                    <span>*******</span>
+                </a>
                 
-                <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-                
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="#intro" class="active">首页</a></li>
-                    <li><a href="#about">关于我</a></li>
-                    <li><a href="#projects">项目作品</a></li>
-                    <li><a href="#skills">技术栈</a></li>
-                    <li><a href="#timeline">时间线</a></li>
-                    <li><a href="#contact">联系我</a></li>
-                    <li>
-                        <button class="theme-toggle" id="themeToggle" title="切换主题">
-                            🌓
-                        </button>
-                    </li>
-                </ul>
+                <div class="quick-access">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="搜索 *******">
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="切换主题">
+                        🌓
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
 
-    <main>
-        <!-- 个人简介 -->
-        <section id="intro" class="intro section">
-            <div class="container">
-                <div class="avatar">
-                    <!-- 头像占位符 -->
-                    👤
-                </div>
-                <h1>[您的姓名/昵称]</h1>
-                <p>[一句话简介，描述您的身份、专长或理念]</p>
-                <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-                    <a href="#contact" class="btn">联系我</a>
-                    <a href="#projects" class="btn btn-outline">查看项目</a>
-                </div>
-            </div>
-        </section>
+    <!-- 面包屑导航 -->
+    <div class="container breadcrumb">
+        <a href="#">首页</a>
+        <span>/</span>
+        <span>*******</span>
+    </div>
 
-        <!-- 关于我 -->
-        <section id="about" class="section" style="background-color: var(--bg-light);">
-            <div class="container">
-                <h2 class="section-title">关于我</h2>
-                <p class="section-subtitle">
-                    <!-- 这里填写个人简介的引导语 -->
-                </p>
-                <div class="card" style="max-width: 800px; margin: 0 auto;">
-                    <h3 style="margin-bottom: 1rem;">个人简介</h3>
-                    <p style="margin-bottom: 1.5rem; color: var(--text-secondary);">
-                        <!-- 在这里填写详细的个人介绍 -->
-                        [请在此处填写您的个人介绍、背景、经历、兴趣爱好等。]
-                    </p>
-                    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
-                        <div>
-                            <h4 style="margin-bottom: 0.5rem;">📍 所在地</h4>
-                            <p style="color: var(--text-secondary);">[您所在的城市/国家]</p>
-                        </div>
-                        <div>
-                            <h4 style="margin-bottom: 0.5rem;">🎓 教育背景</h4>
-                            <p style="color: var(--text-secondary);">[您的学历或专业]</p>
-                        </div>
-                        <div>
-                            <h4 style="margin-bottom: 0.5rem;">💼 当前状态</h4>
-                            <p style="color: var(--text-secondary);">[在职/求学/自由职业等]</p>
-                        </div>
+    <div class="container wiki-container">
+        <!-- 侧边栏目录 -->
+        <aside class="wiki-sidebar">
+            <div class="sidebar-section">
+                <h3>主要分类</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#section1">1. *******</a></li>
+                    <li><a href="#section2">2. *******</a></li>
+                    <li><a href="#section3">3. *******</a></li>
+                    <li><a href="#section4">4. *******</a></li>
+                    <li><a href="#section5">5. *******</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>快速链接</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#">1. *******</a></li>
+                    <li><a href="#">2. *******</a></li>
+                    <li><a href="#">3. *******</a></li>
+                    <li><a href="#">4. *******</a></li>
+                </ul>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>最近更新</h3>
+                <ul class="sidebar-list">
+                    <li><a href="#">1. *******</a></li>
+                    <li><a href="#">2. *******</a></li>
+                    <li><a href="#">3. *******</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="wiki-main">
+            <!-- 门户头部 -->
+            <div class="wiki-header">
+                <h1>*******</h1>
+                <p class="placeholder">*******</p>
+            </div>
+            
+            <!-- 页面内跳转锚点 -->
+            <div class="page-anchors">
+                <a href="#section1" class="anchor-tag">1. *******</a>
+                <a href="#section2" class="anchor-tag">2. *******</a>
+                <a href="#section3" class="anchor-tag">3. *******</a>
+                <a href="#section4" class="anchor-tag">4. *******</a>
+                <a href="#section5" class="anchor-tag">5. *******</a>
+            </div>
+            
+            <!-- 门户卡片网格 -->
+            <div class="portal-grid">
+                <!-- 卡片 1 -->
+                <a href="#" class="portal-card">
+                    <div class="card-icon">📁</div>
+                    <h3>1. *******</h3>
+                    <p class="placeholder">*******</p>
+                    <div style="margin-top: auto; color: var(--primary-color); font-size: 0.9rem; font-weight: 500;">
+                        访问 →
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 项目作品 -->
-        <section id="projects" class="section">
-            <div class="container">
-                <h2 class="section-title">项目作品</h2>
-                <p class="section-subtitle">
-                    <!-- 这里填写项目展示的引导语 -->
-                </p>
+                </a>
                 
-                <div class="projects-grid">
-                    <!-- 项目1 -->
-                    <div class="card project-card">
-                        <div class="card-header">
-                            <div class="project-icon">🚀</div>
-                            <div>
-                                <h3 style="margin-bottom: 0.25rem;">项目标题</h3>
-                                <p style="color: var(--text-secondary); font-size: 0.9rem;">项目类别/标签</p>
-                            </div>
-                        </div>
-                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                            [项目简短描述，说明项目的功能、目标和技术特点。]
-                        </p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <span style="background-color: var(--bg-light); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: var(--text-secondary);">技术标签1</span>
-                                <span style="background-color: var(--bg-light); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: var(--text-secondary);">技术标签2</span>
-                            </div>
-                            <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">查看详情</a>
-                        </div>
+                <!-- 卡片 2 -->
+                <a href="#" class="portal-card">
+                    <div class="card-icon">📚</div>
+                    <h3>2. *******</h3>
+                    <p class="placeholder">*******</p>
+                    <div style="margin-top: auto; color: var(--primary-color); font-size: 0.9rem; font-weight: 500;">
+                        访问 →
                     </div>
-                    
-                    <!-- 项目2 (重复此结构添加更多项目) -->
-                    <div class="card project-card">
-                        <div class="card-header">
-                            <div class="project-icon">🎨</div>
-                            <div>
-                                <h3 style="margin-bottom: 0.25rem;">项目标题</h3>
-                                <p style="color: var(--text-secondary); font-size: 0.9rem;">项目类别/标签</p>
-                            </div>
-                        </div>
-                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                            [项目简短描述，说明项目的功能、目标和技术特点。]
-                        </p>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                <span style="background-color: var(--bg-light); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; color: var(--text-secondary);">技术标签1</span>
-                            </div>
-                            <a href="#" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">查看详情</a>
-                        </div>
-                    </div>
-                    
-                    <!-- 添加更多项目卡片... -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 技术栈 -->
-        <section id="skills" class="section" style="background-color: var(--bg-light);">
-            <div class="container">
-                <h2 class="section-title">技术栈</h2>
-                <p class="section-subtitle">
-                    <!-- 这里填写技术栈的引导语 -->
-                </p>
-                <div class="skills-container">
-                    <!-- 技能标签会自动通过JavaScript生成 -->
-                    <!-- 您可以在下面的script部分修改skills数组 -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 时间线/经历 -->
-        <section id="timeline" class="section">
-            <div class="container">
-                <h2 class="section-title">时间线</h2>
-                <p class="section-subtitle">
-                    <!-- 这里填写时间线的引导语 -->
-                </p>
+                </a>
                 
-                <div class="timeline">
-                    <!-- 时间线项目1 -->
-                    <div class="timeline-item">
-                        <span class="timeline-date">2023年 至今</span>
-                        <div class="card" style="margin-bottom: 0;">
-                            <h3 style="margin-bottom: 0.5rem;">经历/职位/事件标题</h3>
-                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">组织/公司/地点</p>
-                            <p style="color: var(--text-secondary);">
-                                [详细描述，包括成就、职责或学习收获。]
-                            </p>
-                        </div>
+                <!-- 卡片 3 -->
+                <a href="#" class="portal-card">
+                    <div class="card-icon">🔧</div>
+                    <h3>3. *******</h3>
+                    <p class="placeholder">*******</p>
+                    <div style="margin-top: auto; color: var(--primary-color); font-size: 0.9rem; font-weight: 500;">
+                        访问 →
                     </div>
-                    
-                    <!-- 时间线项目2 -->
-                    <div class="timeline-item">
-                        <span class="timeline-date">2021-2023年</span>
-                        <div class="card" style="margin-bottom: 0;">
-                            <h3 style="margin-bottom: 0.5rem;">经历/职位/事件标题</h3>
-                            <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">组织/公司/地点</p>
-                            <p style="color: var(--text-secondary);">
-                                [详细描述，包括成就、职责或学习收获。]
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- 添加更多时间线项目... -->
-                </div>
-            </div>
-        </section>
-
-        <!-- 联系我 -->
-        <section id="contact" class="section" style="background-color: var(--bg-light);">
-            <div class="container">
-                <h2 class="section-title">联系我</h2>
-                <p class="section-subtitle">
-                    <!-- 这里填写联系方式的引导语 -->
-                </p>
+                </a>
                 
-                <div class="contact-form">
-                    <div class="form-group">
-                        <label for="name">姓名</label>
-                        <input type="text" id="name" class="form-control" placeholder="请输入您的姓名">
+                <!-- 卡片 4 -->
+                <a href="#" class="portal-card">
+                    <div class="card-icon">📊</div>
+                    <h3>4. *******</h3>
+                    <p class="placeholder">*******</p>
+                    <div style="margin-top: auto; color: var(--primary-color); font-size: 0.9rem; font-weight: 500;">
+                        访问 →
                     </div>
-                    <div class="form-group">
-                        <label for="email">邮箱</label>
-                        <input type="email" id="email" class="form-control" placeholder="请输入您的邮箱">
+                </a>
+            </div>
+            
+            <!-- 索引列表区域 -->
+            <div class="index-list">
+                <div class="index-section" id="section1">
+                    <h3>1. *******</h3>
+                    <div class="index-items">
+                        <div class="index-item">
+                            <h4>1.1 *******</h4>
+                            <p class="placeholder">*******</p>
+                        </div>
+                        <div class="index-item">
+                            <h4>1.2 *******</h4>
+                            <p class="placeholder">*******</p>
+                        </div>
+                        <div class="index-item">
+                            <h4>1.3 *******</h4>
+                            <p class="placeholder">*******</p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="message">留言</label>
-                        <textarea id="message" class="form-control" rows="5" placeholder="请输入您的留言..."></textarea>
-                    </div>
-                    <button type="submit" class="btn" style="width: 100%;">发送消息</button>
+                </div>
+                
+                <div class="index-section" id="section2">
+                    <h3>2. *******</h3>
+                    <ul class="numbered-list">
+                        <li>2.1 *******</li>
+                        <li>2.2 *******</li>
+                        <li>2.3 *******</li>
+                        <li>2.4 *******</li>
+                    </ul>
+                </div>
+                
+                <div class="index-section" id="section3">
+                    <h3>3. *******</h3>
+                    <ul class="numbered-list">
+                        <li>3.1 *******</li>
+                        <li>3.2 *******</li>
+                        <li>3.3 *******</li>
+                    </ul>
                 </div>
             </div>
-        </section>
-    </main>
+            
+            <!-- 其他内容区域 -->
+            <div class="portal-card">
+                <h3>*******</h3>
+                <p class="placeholder">*******</p>
+                
+                <div style="margin-top: 1.5rem;">
+                    <h4>相关链接：</h4>
+                    <ul class="numbered-list">
+                        <li>1. *******</li>
+                        <li>2. *******</li>
+                        <li>3. *******</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <!-- 页脚 -->
-    <footer>
+    <footer class="wiki-footer">
         <div class="container">
-            <div style="text-align: center;">
-                <a href="#" class="logo" style="font-size: 1.8rem; margin-bottom: 1rem; display: inline-block;">Your<span class="logo-accent">Space</span></a>
-                <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
-                    [您的个人标语或简短介绍]
+            <div class="footer-grid">
+                <div>
+                    <h3 class="placeholder">*******</h3>
+                    <ul class="sidebar-list">
+                        <li><a href="#">1. *******</a></li>
+                        <li><a href="#">2. *******</a></li>
+                        <li><a href="#">3. *******</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="placeholder">*******</h3>
+                    <ul class="sidebar-list">
+                        <li><a href="#">1. *******</a></li>
+                        <li><a href="#">2. *******</a></li>
+                        <li><a href="#">3. *******</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="placeholder">*******</h3>
+                    <ul class="sidebar-list">
+                        <li><a href="#">1. *******</a></li>
+                        <li><a href="#">2. *******</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="text-align: center; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <p style="color: var(--text-secondary); margin-bottom: 0.5rem;">
+                    <span class="placeholder">*******</span> | © <span class="placeholder">*******</span>
                 </p>
-            </div>
-            
-            <div class="social-links">
-                <a href="#" class="social-link" title="GitHub">🐱</a>
-                <a href="#" class="social-link" title="Twitter">🐦</a>
-                <a href="#" class="social-link" title="LinkedIn">💼</a>
-                <a href="#" class="social-link" title="Email">✉️</a>
-                <a href="#" class="social-link" title="Blog">📝</a>
-            </div>
-            
-            <div style="text-align: center; color: var(--text-secondary); font-size: 0.9rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
-                <p>© 2023 [您的姓名]. 保留所有权利. | 基于 GitHub Pages 部署</p>
-                <p style="margin-top: 0.5rem; font-size: 0.85rem;">最后更新: [更新日期]</p>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    最后更新: <span class="placeholder">*******</span> | 版本: <span class="placeholder">*******</span>
+                </p>
             </div>
         </div>
     </footer>
 
     <script>
-        // 页面加载完成后执行
+        // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
-            // 移动端菜单切换
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const navLinks = document.getElementById('navLinks');
-            
-            mobileMenuBtn.addEventListener('click', function() {
-                navLinks.classList.toggle('active');
-                mobileMenuBtn.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
-            });
-            
             // 主题切换功能
             const themeToggle = document.getElementById('themeToggle');
             themeToggle.addEventListener('click', function() {
                 document.body.classList.toggle('dark-theme');
                 themeToggle.textContent = document.body.classList.contains('dark-theme') ? '☀️' : '🌓';
-                // 保存主题偏好到本地存储
-                localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+                localStorage.setItem('portal-theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
             });
             
-            // 检查保存的主题偏好
-            const savedTheme = localStorage.getItem('theme');
+            // 检查保存的主题
+            const savedTheme = localStorage.getItem('portal-theme');
             if (savedTheme === 'dark') {
                 document.body.classList.add('dark-theme');
                 themeToggle.textContent = '☀️';
             }
             
-            // 平滑滚动
+            // 搜索框功能
+            const searchInput = document.querySelector('.search-box input');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    alert('搜索功能需要后端支持。您可以集成第三方搜索服务或实现客户端搜索。');
+                    // 这里可以添加搜索逻辑
+                }
+            });
+            
+            // 平滑滚动到锚点
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function(e) {
                     const href = this.getAttribute('href');
-                    if (href === '#') return;
+                    if (href === '#' || href === '#!') return;
                     
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        const headerHeight = document.querySelector('header').offsetHeight;
-                        const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                        
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
-                        
-                        // 更新活动导航链接
-                        document.querySelectorAll('.nav-links a').forEach(link => {
-                            link.classList.remove('active');
-                        });
-                        this.classList.add('active');
-                        
-                        // 移动端点击后关闭菜单
-                        if (window.innerWidth <= 768) {
-                            navLinks.classList.remove('active');
-                            mobileMenuBtn.textContent = '☰';
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            const headerHeight = document.querySelector('header').offsetHeight;
+                            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                            
+                            window.scrollTo({
+                                top: targetPosition,
+                                behavior: 'smooth'
+                            });
                         }
                     }
                 });
             });
             
-            // 技能标签数据 - 在这里修改您的技能
-            const skills = [
-                'HTML/CSS', 'JavaScript', 'Git', 'GitHub', 'React', 'Vue.js',
-                'Node.js', 'Python', 'UI/UX设计', '响应式设计', 'Web性能优化'
-            ];
-            
-            const skillsContainer = document.querySelector('.skills-container');
-            skills.forEach(skill => {
-                const tag = document.createElement('div');
-                tag.className = 'skill-tag';
-                tag.textContent = skill;
-                skillsContainer.appendChild(tag);
-            });
-            
-            // 简单的表单提交处理 (示例)
-            const contactForm = document.querySelector('.contact-form');
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('表单提交功能需要后端支持。在GitHub Pages上，您可以考虑使用Formspree或Netlify Forms等第三方服务。');
-                // 这里可以添加实际的表单提交逻辑
+            // 卡片点击效果
+            document.querySelectorAll('.portal-card[href="#"]').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const title = this.querySelector('h3').textContent;
+                    alert(`导航到: ${title}\n\n请将此链接替换为实际的目标页面URL。`);
+                });
             });
             
             // 控制台信息
-            console.log('个人网站模板已加载 | 设计：简约通用风格 | 托管：GitHub Pages');
-            console.log('提示：请根据您的需求修改内容。');
-        });
-        
-        // 滚动时更新活动导航链接
-        window.addEventListener('scroll', function() {
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-links a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= (sectionTop - 150)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${current}`) {
-                    link.classList.add('active');
-                }
-            });
+            console.log('Wiki导航门户已加载 | 设计：Wiki风格门户 | 托管：GitHub Pages');
+            console.log('提示：所有"*******"需要替换为实际内容，链接需要添加实际URL。');
         });
     </script>
 </body>
