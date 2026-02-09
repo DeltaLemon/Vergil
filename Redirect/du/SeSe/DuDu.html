@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件后缀名修改与C语言+=运算符教程</title>
+    <title>文件后缀名修改与+=运算符教程</title>
     <style>
         /* ===== CSS变量定义 (与之前保持一致) ===== */
         :root {
@@ -410,6 +410,20 @@
             font-size: 1rem;
         }
         
+        /* 代码块容器 - 添加横向滚动支持 */
+        .code-container {
+            position: relative;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .code-scroll-wrapper {
+            position: relative;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-bottom: 10px; /* 为滚动条留空间 */
+        }
+        
         .code-block {
             background-color: var(--code-bg);
             color: var(--code-text);
@@ -418,28 +432,77 @@
             font-family: 'Courier New', monospace;
             font-size: 0.95rem;
             line-height: 1.5;
-            overflow-x: auto;
-            margin: 1rem 0;
+            min-width: min-content;
+            white-space: pre;
             border: 1px solid var(--border-color);
-            white-space: pre-wrap;
-            word-wrap: break-word;
         }
         
-        .example-grid {
+        /* 滑动条样式 */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .scroll-hint {
+            display: none;
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+        }
+        
+        /* 当内容溢出时显示滑动提示 */
+        .code-container.overflowing .scroll-hint {
+            display: block;
+        }
+        
+        /* 语言示例网格 */
+        .language-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 20px;
             margin: 1.5rem 0;
         }
         
-        .example-card {
+        .language-card {
             background: var(--bg-light);
             border-radius: 8px;
             padding: 1.5rem;
             border: 1px solid var(--border-color);
+            transition: var(--transition);
         }
         
-        .example-card h5 {
+        .language-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow);
+        }
+        
+        .language-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .language-icon {
+            font-size: 1.5rem;
+        }
+        
+        .language-card h5 {
             font-size: 1.1rem;
             margin-bottom: 0.75rem;
             color: var(--primary-color);
@@ -500,8 +563,13 @@
                 margin: 0 0.75rem;
             }
             
-            .example-grid {
+            .language-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .code-block {
+                white-space: pre-wrap; /* 在移动端允许换行 */
+                min-width: auto;
             }
         }
     </style>
@@ -527,7 +595,7 @@
                 <ul class="tutorial-nav">
                     <li><a href="#step1" class="active" data-step="1"><span class="nav-step">1</span>打开文件扩展名设置</a></li>
                     <li><a href="#step2" data-step="2"><span class="nav-step">2</span>文件重命名修改扩展名</a></li>
-                    <li><a href="#step3" data-step="3"><span class="nav-step">3</span>C语言"+="运算符解析</a></li>
+                    <li><a href="#step3" data-step="3"><span class="nav-step">3</span>+=运算符解析</a></li>
                 </ul>
                 
                 <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
@@ -535,8 +603,9 @@
                     <div style="font-size: 0.9rem; color: var(--text-secondary);">
                         <p>• 文件扩展名的作用</p>
                         <p>• 各系统文件管理差异</p>
-                        <p>• C语言复合赋值运算符</p>
-                        <p>• 编程基础语法要点</p>
+                        <p>• 复合赋值运算符</p>
+                        <p>• 字符串连接操作</p>
+                        <p>• 多语言语法对比</p>
                     </div>
                 </div>
             </aside>
@@ -544,8 +613,8 @@
             <!-- 主教程区域 -->
             <main class="tutorial-main">
                 <div class="tutorial-header">
-                    <h1>文件后缀名修改与C语言+=运算符教程</h1>
-                    <p class="tutorial-description">本教程包含两部分：文件扩展名修改指南和C语言"+=（加法赋值）"运算符的详细解析与示例。</p>
+                    <h1>文件后缀名修改与+=运算符教程</h1>
+                    <p class="tutorial-description">本教程包含两部分：文件扩展名修改指南和"+=（加法赋值）"运算符的详细解析与示例，涵盖多种编程语言。</p>
                 </div>
 
                 <!-- 教程步骤1 -->
@@ -711,140 +780,254 @@
                         </div>
                     </div>
                     
-                    <!-- 教程步骤3：C语言+=运算符解析 -->
+                    <!-- 教程步骤3：+=运算符解析 -->
                     <div id="step3" class="step-card">
                         <div class="step-header" data-step="3">
-                            <h3><span class="step-number">3</span>C语言"+=（加法赋值）"运算符解析</h3>
+                            <h3><span class="step-number">3</span>+=运算符解析（C语言与多语言对比）</h3>
                             <button class="step-toggle">▶</button>
                         </div>
                         <div class="step-content">
                             <div class="info-box">
-                                <strong>学习目标：</strong> 理解C语言中"+="运算符的作用、语法和使用场景，掌握复合赋值运算符的使用技巧。
+                                <strong>学习目标：</strong> 理解"+="运算符在C语言及其他编程语言中的作用、语法和使用场景，掌握字符串连接等高级用法。
                             </div>
                             
                             <div class="step-instruction">
-                                <h4>一、+= 运算符的基本概念</h4>
+                                <h4>一、C语言中 += 运算符</h4>
                                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                                     "+=" 是C语言中的复合赋值运算符，称为"加法赋值运算符"。它将右侧表达式的值加到左侧变量的当前值上，然后将结果赋给左侧变量。
                                 </p>
                                 
                                 <div class="code-section">
-                                    <h4>基本语法格式</h4>
-                                    <div class="code-block">
+                                    <h4>C语言基本语法</h4>
+                                    <div class="code-container">
+                                        <div class="code-scroll-wrapper">
+                                            <div class="code-block">
 // 基本语法
 变量 += 表达式;
 
 // 等价于
 变量 = 变量 + 表达式;
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="step-instruction">
-                                <h4>二、+= 运算符的使用示例</h4>
-                                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                                    以下示例展示了"+="运算符在不同场景下的应用：
-                                </p>
-                                
-                                <div class="example-grid">
-                                    <div class="example-card">
-                                        <h5>示例1：基本数值累加</h5>
-                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
+
+// 示例：数值累加
 int count = 5;
 count += 3; // count 现在为 8
-// 等价于: count = count + 3;
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="example-card">
-                                        <h5>示例2：循环中的累加</h5>
-                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
+
+// 示例：循环累加
 int sum = 0;
 for(int i = 1; i &lt;= 10; i++) {
     sum += i; // 将i的值加到sum上
 }
 // 循环结束后，sum = 1+2+...+10 = 55
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="example-card">
-                                        <h5>示例3：字符串连接（指针移动）</h5>
-                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-char str[50] = "Hello";
-char *ptr = str;
-ptr += 5; // 指针向前移动5个字符位置
-strcpy(ptr, " World!");
-// 现在 str = "Hello World!"
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="example-card">
-                                        <h5>示例4：数组索引累加</h5>
-                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-int array[100];
-int index = 0;
-for(int i = 0; i &lt; 100; i++) {
-    array[index] = i * 2;
-    index += 1; // 索引递增
-}
-// 更简洁的写法：array[index++] = i * 2;
+                                            </div>
+                                            <div class="scroll-indicator">⇄ 滑动查看</div>
+                                            <div class="scroll-hint">可滑动查看更多内容</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="step-instruction">
-                                <h4>三、+= 与其他复合赋值运算符</h4>
+                                <h4>二、其他编程语言中的 += 运算符</h4>
                                 <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                                    C语言中还有其他的复合赋值运算符，它们的用法与"+="类似：
+                                    在大多数类C语言中，"+="运算符的行为类似，但在字符串操作等方面有显著差异。
                                 </p>
                                 
-                                <div class="code-block">
-int x = 10;
+                                <div class="language-grid">
+                                    <div class="language-card">
+                                        <div class="language-header">
+                                            <span class="language-icon">🐍</span>
+                                            <h5>Python</h5>
+                                        </div>
+                                        <div class="code-container">
+                                            <div class="code-scroll-wrapper">
+                                                <div class="code-block">
+# Python中 += 运算符
+# 数值运算
+x = 10
+x += 5  # x 现在为 15
 
-x += 5;  // x = x + 5;    (x 现在为 15)
-x -= 3;  // x = x - 3;    (x 现在为 12)
-x *= 2;  // x = x * 2;    (x 现在为 24)
-x /= 4;  // x = x / 4;    (x 现在为 6)
-x %= 5;  // x = x % 5;    (x 现在为 1)
+# 字符串连接（Python特有）
+text = "Hello"
+text += " World"  # text 现在为 "Hello World"
+
+# 列表扩展
+numbers = [1, 2, 3]
+numbers += [4, 5]  # numbers 现在为 [1, 2, 3, 4, 5]
+
+# 注意：Python中的字符串是不可变的
+# text += "!" 会创建新的字符串对象
+                                                </div>
+                                                <div class="scroll-indicator">⇄</div>
+                                                <div class="scroll-hint">可滑动</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="language-card">
+                                        <div class="language-header">
+                                            <span class="language-icon">☕</span>
+                                            <h5>Java</h5>
+                                        </div>
+                                        <div class="code-container">
+                                            <div class="code-scroll-wrapper">
+                                                <div class="code-block">
+// Java中 += 运算符
+// 数值运算
+int x = 10;
+x += 5;  // x 现在为 15
+
+// 字符串连接（String类）
+String text = "Hello";
+text += " World";  // text 现在为 "Hello World"
+// 注意：Java字符串也是不可变的，这会创建新对象
+
+// StringBuilder更高效
+StringBuilder sb = new StringBuilder("Hello");
+sb.append(" World");  // 推荐使用append而不是+=
+
+// 复合赋值与类型转换
+byte b = 10;
+b += 5;  // 正确，等价于 b = (byte)(b + 5)
+// b = b + 5;  // 错误，需要显式类型转换
+                                                </div>
+                                                <div class="scroll-indicator">⇄</div>
+                                                <div class="scroll-hint">可滑动</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="language-card">
+                                        <div class="language-header">
+                                            <span class="language-icon">🟨</span>
+                                            <h5>JavaScript</h5>
+                                        </div>
+                                        <div class="code-container">
+                                            <div class="code-scroll-wrapper">
+                                                <div class="code-block">
+// JavaScript中 += 运算符
+// 数值运算
+let x = 10;
+x += 5;  // x 现在为 15
+
+// 字符串连接（JavaScript的强项）
+let text = "Hello";
+text += " World";  // text 现在为 "Hello World"
+
+// 与其他类型混合
+let result = "Count: ";
+result += 10;  // result 现在为 "Count: 10"（自动类型转换）
+
+// 数组连接（不常见）
+let arr = [1, 2];
+arr += [3, 4];  // 注意：这会转换为字符串 "1,23,4"
+// 正确做法：arr = arr.concat([3, 4])
+
+// 模板字符串（ES6+）
+let name = "Alice";
+let greeting = "Hello, ";
+greeting += `${name}!`;  // greeting 现在为 "Hello, Alice!"
+                                                </div>
+                                                <div class="scroll-indicator">⇄</div>
+                                                <div class="scroll-hint">可滑动</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="language-card">
+                                        <div class="language-header">
+                                            <span class="language-icon">🦀</span>
+                                            <h5>C++</h5>
+                                        </div>
+                                        <div class="code-container">
+                                            <div class="code-scroll-wrapper">
+                                                <div class="code-block">
+// C++中 += 运算符
+// 数值运算（与C相同）
+int x = 10;
+x += 5;  // x 现在为 15
+
+// 字符串连接（std::string）
+#include &lt;string&gt;
+std::string text = "Hello";
+text += " World";  // text 现在为 "Hello World"
+// C++的std::string是可变的，效率较高
+
+// 运算符重载
+class Vector {
+public:
+    int x, y;
+    Vector& operator+=(const Vector& other) {
+        x += other.x;
+        y += other.y;
+        return *this;
+    }
+};
+
+Vector v1{1, 2}, v2{3, 4};
+v1 += v2;  // v1 现在为 {4, 6}
+
+// 注意：C++中的字符数组不能直接使用+=
+                                                </div>
+                                                <div class="scroll-indicator">⇄</div>
+                                                <div class="scroll-hint">可滑动</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
                             <div class="step-instruction">
-                                <h4>四、使用注意事项与最佳实践</h4>
+                                <h4>三、+= 运算符的特殊用法与注意事项</h4>
+                                <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                                    不同语言中"+="运算符的行为差异总结：
+                                </p>
                                 
-                                <div class="warning-box">
-                                    <strong>注意事项1：类型一致性</strong><br>
-                                    确保"+="两侧的操作数类型兼容，否则可能导致隐式类型转换或编译错误。
+                                <div class="code-container">
+                                    <div class="code-scroll-wrapper">
+                                        <div class="code-block">
+// 语言对比表 - += 运算符的行为差异
+
+// 1. 字符串连接支持
+// Python:     支持，但创建新字符串
+// Java:       支持，但创建新字符串（推荐StringBuilder）
+// JavaScript: 支持，自动类型转换
+// C++:        支持（std::string），效率高
+// C:          不支持字符串，仅支持字符数组操作
+
+// 2. 类型转换行为
+// JavaScript: 自动类型转换
+// Java:       自动窄化转换（如byte += int）
+// Python:     动态类型，无需转换
+// C/C++:      需要显式转换
+
+// 3. 性能考虑
+// Python/Java: 字符串+=创建新对象，循环中效率低
+// JavaScript:  现代引擎优化较好
+// C++:         std::string可原地修改，效率高
+// C:           无内置字符串类型
+
+// 4. 最佳实践总结
+// - 数值运算：所有语言类似
+// - 字符串连接：注意语言特性和性能
+// - 循环中使用：考虑使用其他方法（如StringBuilder、join等）
+// - 类型安全：注意隐式类型转换
+                                        </div>
+                                        <div class="scroll-indicator">⇄</div>
+                                        <div class="scroll-hint">可滑动</div>
+                                    </div>
                                 </div>
                                 
                                 <div class="warning-box">
-                                    <strong>注意事项2：副作用</strong><br>
-                                    当右侧表达式有副作用时（如函数调用、递增递减运算符），需注意执行顺序。例如：
-                                    <div class="code-block" style="margin-top: 0.5rem; font-size: 0.85rem;">
-int a = 5;
-a += someFunction(); 
-// someFunction()只调用一次，而不是两次
-                                    </div>
+                                    <strong>重要提醒：字符串连接性能</strong><br>
+                                    在循环中使用"+="进行字符串连接可能导致性能问题（如Python、Java）。在这些语言中，推荐使用专门的字符串构建器（如Java的StringBuilder或Python的join方法）。
                                 </div>
                                 
                                 <div class="success-box">
-                                    <strong>最佳实践：代码简洁性</strong><br>
-                                    使用"+="可以使代码更简洁、易读，特别是在循环和累加操作中。例如：
-                                    <div class="code-block" style="margin-top: 0.5rem; font-size: 0.85rem;">
-// 使用 += 更简洁
-total += value;
-
-// 比下面的写法更好
-total = total + value;
-                                    </div>
-                                </div>
-                                
-                                <div class="info-box">
-                                    <strong>扩展学习：</strong><br>
-                                    1. "+="运算符也适用于C++、Java、C#、JavaScript等类似C语法的语言<br>
-                                    2. 理解"+="有助于学习其他复合赋值运算符（如"-="、"*="、"/="等）<br>
-                                    3. 在性能敏感的代码中，使用复合赋值运算符可能产生更高效的机器码
+                                    <strong>通用最佳实践</strong><br>
+                                    1. 对于数值运算，"+="是清晰简洁的选择<br>
+                                    2. 对于字符串操作，了解目标语言的特性和最佳实践<br>
+                                    3. 在循环中大量拼接字符串时，考虑使用更高效的替代方案<br>
+                                    4. 注意类型安全和隐式转换规则
                                 </div>
                             </div>
                         </div>
@@ -858,7 +1041,7 @@ total = total + value;
     <footer class="tutorial-footer">
         <div class="container">
             <div>
-                <p style="color: var(--text-secondary);">© 2023 文件操作与C语言教程 | 本页面为静态教程示例</p>
+                <p style="color: var(--text-secondary);">© 2023 文件操作与+=运算符教程 | 本页面为静态教程示例</p>
                 <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">最后更新: <span id="currentDate"></span></p>
             </div>
             <div class="footer-links">
@@ -1003,12 +1186,37 @@ total = total + value;
                 }
             });
             
+            // 检测代码块是否需要滑动条
+            function checkCodeOverflow() {
+                const codeContainers = document.querySelectorAll('.code-container');
+                
+                codeContainers.forEach(container => {
+                    const scrollWrapper = container.querySelector('.code-scroll-wrapper');
+                    const codeBlock = container.querySelector('.code-block');
+                    
+                    if (scrollWrapper && codeBlock) {
+                        // 检查内容是否超出容器宽度
+                        const isOverflowing = codeBlock.scrollWidth > scrollWrapper.clientWidth;
+                        
+                        if (isOverflowing) {
+                            container.classList.add('overflowing');
+                        } else {
+                            container.classList.remove('overflowing');
+                        }
+                    }
+                });
+            }
+            
+            // 初始检查和窗口大小变化时重新检查
+            checkCodeOverflow();
+            window.addEventListener('resize', checkCodeOverflow);
+            
             // 控制台提示
-            console.log('文件后缀名与C语言教程页面已加载');
+            console.log('文件后缀名与+=运算符教程页面已加载');
             console.log('使用提示：');
             console.log('1. 替换外部链接：找到id="externalLink"的a标签，修改href属性');
-            console.log('2. 添加图片：在需要的地方添加教程截图');
-            console.log('3. 扩展C语言示例：可以添加更多代码示例和练习题');
+            console.log('2. 代码块支持横向滑动查看');
+            console.log('3. 可在语言示例部分添加更多编程语言');
         });
     </script>
 </body>
