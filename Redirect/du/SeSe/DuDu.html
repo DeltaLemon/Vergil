@@ -772,11 +772,12 @@
                                 <div class="example-grid">
                                     <div class="example-card">
                                         <h5>示例1：基本数值累加</h5>
-                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-                                            <span class="code-keyword">int</span> count <span class="code-operator">=</span> <span class="code-number">5</span>;<br>
-                                            count <span class="code-operator">+=</span> <span class="code-number">3</span>; <span class="code-comment">// count 现在为 8</span><br>
-                                            <span class="code-comment">// 等价于: count = count + 3;</span>
-                                        </div>
+                                        <!-- 示例1：基本数值累加 -->
+                                            <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
+                                            int count = 5;
+                                            count += 3; // count 现在为 8
+                                            // 等价于: count = count + 3;
+                                            </div>
                                     </div>
                                     
                                     <div class="example-card">
@@ -1024,23 +1025,40 @@
                 }
             });
             
-            // 代码语法高亮（简单实现）
-            function highlightCodeBlocks() {
-                const codeBlocks = document.querySelectorAll('.code-block');
-                codeBlocks.forEach(block => {
-                    let code = block.innerHTML;
+                // 增强的语法高亮函数
+                function highlightCodeBlocks() {
+                    const codeBlocks = document.querySelectorAll('.code-block');
                     
-                    // 简单的关键字高亮
-                    code = code.replace(/\b(int|char|for|if|else|return)\b/g, '<span class="code-keyword">$1</span>');
-                    code = code.replace(/\b(strcpy|printf|scanf)\b/g, '<span class="code-function">$1</span>');
-                    code = code.replace(/(\d+)/g, '<span class="code-number">$1</span>');
-                    code = code.replace(/("[^"]*")/g, '<span class="code-string">$1</span>');
-                    code = code.replace(/(\/\/[^\n]*)/g, '<span class="code-comment">$1</span>');
-                    code = code.replace(/(\+=|\-=|\*=|\/=|%=|\+\+|\-\-|==|!=|<=|>=|[+\-*\/%=&|^<>!])/g, '<span class="code-operator">$1</span>');
-                    
-                    block.innerHTML = code;
-                });
-            }
+                    codeBlocks.forEach(block => {
+                        // 获取原始文本内容（已转义的）
+                        let code = block.textContent;
+                        
+                        // 解码HTML实体（将 &lt; 转回 < 等）
+                        const textarea = document.createElement('textarea');
+                        textarea.innerHTML = code;
+                        code = textarea.value;
+                        
+                        // 现在进行语法高亮替换
+                        code = code.replace(/&lt;\/?span[^&gt;]*&gt;/g, ''); // 清理可能残留的span标签
+                        
+                        // 高亮规则（按顺序执行）
+                        code = code.replace(/\/\/[^\n]*/g, '<span class="code-comment">$&</span>');
+                        code = code.replace(/\b(int|char|for|if|else|return|while|do|switch|case|break|continue|void|float|double|short|long|unsigned|signed|const|static|extern|volatile|typedef|struct|enum|union|goto|sizeof)\b/g, '<span class="code-keyword">$&</span>');
+                        code = code.replace(/\b(printf|scanf|strcpy|strcat|strlen|strcmp|malloc|free|sizeof|main)\b(?=\s*\()/g, '<span class="code-function">$&</span>');
+                        code = code.replace(/\b\d+\b/g, '<span class="code-number">$&</span>');
+                        code = code.replace(/"[^"]*"/g, '<span class="code-string">$&</span>');
+                        code = code.replace(/(\+=|\-=|\*=|\/=|%=|\+\+|\-\-|==|!=|<=|>=|&=|\|=|\^=|&&|\|\||[+\-*\/%=&|^<>!])/g, '<span class="code-operator">$&</span>');
+                        
+                        // 重新编码<和>，防止被解析为HTML标签
+                        code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        
+                        // 将换行符转换为<br>
+                        code = code.replace(/\n/g, '<br>');
+                        
+                        // 更新内容
+                        block.innerHTML = code;
+                    });
+                }
             
             highlightCodeBlocks();
             
