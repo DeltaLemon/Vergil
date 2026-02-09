@@ -421,32 +421,8 @@
             overflow-x: auto;
             margin: 1rem 0;
             border: 1px solid var(--border-color);
-        }
-        
-        .code-comment {
-            color: #6a9955;
-            font-style: italic;
-        }
-        
-        .code-keyword {
-            color: #569cd6;
-        }
-        
-        .code-function {
-            color: #dcdcaa;
-        }
-        
-        .code-number {
-            color: #b5cea8;
-        }
-        
-        .code-string {
-            color: #ce9178;
-        }
-        
-        .code-operator {
-            color: #d4d4d4;
-            font-weight: bold;
+            white-space: pre-wrap;
+            word-wrap: break-word;
         }
         
         .example-grid {
@@ -755,10 +731,11 @@
                                 <div class="code-section">
                                     <h4>基本语法格式</h4>
                                     <div class="code-block">
-                                        <span class="code-comment">// 基本语法</span><br>
-                                        <span class="code-keyword">变量</span> <span class="code-operator">+=</span> <span class="code-keyword">表达式</span>;<br><br>
-                                        <span class="code-comment">// 等价于</span><br>
-                                        <span class="code-keyword">变量</span> <span class="code-operator">=</span> <span class="code-keyword">变量</span> <span class="code-operator">+</span> <span class="code-keyword">表达式</span>;
+// 基本语法
+变量 += 表达式;
+
+// 等价于
+变量 = 变量 + 表达式;
                                     </div>
                                 </div>
                             </div>
@@ -772,46 +749,45 @@
                                 <div class="example-grid">
                                     <div class="example-card">
                                         <h5>示例1：基本数值累加</h5>
-                                        <!-- 示例1：基本数值累加 -->
-                                            <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-                                            int count = 5;
-                                            count += 3; // count 现在为 8
-                                            // 等价于: count = count + 3;
-                                            </div>
+                                        <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
+int count = 5;
+count += 3; // count 现在为 8
+// 等价于: count = count + 3;
+                                        </div>
                                     </div>
                                     
                                     <div class="example-card">
                                         <h5>示例2：循环中的累加</h5>
                                         <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-                                            <span class="code-keyword">int</span> sum <span class="code-operator">=</span> <span class="code-number">0</span>;<br>
-                                            <span class="code-keyword">for</span>(<span class="code-keyword">int</span> i <span class="code-operator">=</span> <span class="code-number">1</span>; i <span class="code-operator">&lt;=</span> <span class="code-number">10</span>; i<span class="code-operator">++</span>) {<br>
-                                            &nbsp;&nbsp;sum <span class="code-operator">+=</span> i; <span class="code-comment">// 将i的值加到sum上</span><br>
-                                            }<br>
-                                            <span class="code-comment">// 循环结束后，sum = 1+2+...+10 = 55</span>
+int sum = 0;
+for(int i = 1; i &lt;= 10; i++) {
+    sum += i; // 将i的值加到sum上
+}
+// 循环结束后，sum = 1+2+...+10 = 55
                                         </div>
                                     </div>
                                     
                                     <div class="example-card">
                                         <h5>示例3：字符串连接（指针移动）</h5>
                                         <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-                                            <span class="code-keyword">char</span> str[<span class="code-number">50</span>] <span class="code-operator">=</span> <span class="code-string">"Hello"</span>;<br>
-                                            <span class="code-keyword">char</span> <span class="code-operator">*</span>ptr <span class="code-operator">=</span> str;<br>
-                                            ptr <span class="code-operator">+=</span> <span class="code-number">5</span>; <span class="code-comment">// 指针向前移动5个字符位置</span><br>
-                                            <span class="code-function">strcpy</span>(ptr, <span class="code-string">" World!"</span>);<br>
-                                            <span class="code-comment">// 现在 str = "Hello World!"</span>
+char str[50] = "Hello";
+char *ptr = str;
+ptr += 5; // 指针向前移动5个字符位置
+strcpy(ptr, " World!");
+// 现在 str = "Hello World!"
                                         </div>
                                     </div>
                                     
                                     <div class="example-card">
                                         <h5>示例4：数组索引累加</h5>
                                         <div class="code-block" style="font-size: 0.85rem; padding: 1rem;">
-                                            <span class="code-keyword">int</span> array[<span class="code-number">100</span>];<br>
-                                            <span class="code-keyword">int</span> index <span class="code-operator">=</span> <span class="code-number">0</span>;<br>
-                                            <span class="code-keyword">for</span>(<span class="code-keyword">int</span> i <span class="code-operator">=</span> <span class="code-number">0</span>; i <span class="code-operator">&lt;</span> <span class="code-number">100</span>; i<span class="code-operator">++</span>) {<br>
-                                            &nbsp;&nbsp;array[index] <span class="code-operator">=</span> i <span class="code-operator">*</span> <span class="code-number">2</span>;<br>
-                                            &nbsp;&nbsp;index <span class="code-operator">+=</span> <span class="code-number">1</span>; <span class="code-comment">// 索引递增</span><br>
-                                            }<br>
-                                            <span class="code-comment">// 更简洁的写法：array[index++] = i * 2;</span>
+int array[100];
+int index = 0;
+for(int i = 0; i &lt; 100; i++) {
+    array[index] = i * 2;
+    index += 1; // 索引递增
+}
+// 更简洁的写法：array[index++] = i * 2;
                                         </div>
                                     </div>
                                 </div>
@@ -824,12 +800,13 @@
                                 </p>
                                 
                                 <div class="code-block">
-                                    <span class="code-keyword">int</span> x <span class="code-operator">=</span> <span class="code-number">10</span>;<br><br>
-                                    x <span class="code-operator">+=</span> <span class="code-number">5</span>;  <span class="code-comment">// x = x + 5;    (x 现在为 15)</span><br>
-                                    x <span class="code-operator">-=</span> <span class="code-number">3</span>;  <span class="code-comment">// x = x - 3;    (x 现在为 12)</span><br>
-                                    x <span class="code-operator">*=</span> <span class="code-number">2</span>;  <span class="code-comment">// x = x * 2;    (x 现在为 24)</span><br>
-                                    x <span class="code-operator">/=</span> <span class="code-number">4</span>;  <span class="code-comment">// x = x / 4;    (x 现在为 6)</span><br>
-                                    x <span class="code-operator">%=</span> <span class="code-number">5</span>;  <span class="code-comment">// x = x % 5;    (x 现在为 1)</span>
+int x = 10;
+
+x += 5;  // x = x + 5;    (x 现在为 15)
+x -= 3;  // x = x - 3;    (x 现在为 12)
+x *= 2;  // x = x * 2;    (x 现在为 24)
+x /= 4;  // x = x / 4;    (x 现在为 6)
+x %= 5;  // x = x % 5;    (x 现在为 1)
                                 </div>
                             </div>
                             
@@ -845,9 +822,9 @@
                                     <strong>注意事项2：副作用</strong><br>
                                     当右侧表达式有副作用时（如函数调用、递增递减运算符），需注意执行顺序。例如：
                                     <div class="code-block" style="margin-top: 0.5rem; font-size: 0.85rem;">
-                                        <span class="code-keyword">int</span> a <span class="code-operator">=</span> <span class="code-number">5</span>;<br>
-                                        a <span class="code-operator">+=</span> <span class="code-function">someFunction</span>(); <br>
-                                        <span class="code-comment">// someFunction()只调用一次，而不是两次</span>
+int a = 5;
+a += someFunction(); 
+// someFunction()只调用一次，而不是两次
                                     </div>
                                 </div>
                                 
@@ -855,10 +832,11 @@
                                     <strong>最佳实践：代码简洁性</strong><br>
                                     使用"+="可以使代码更简洁、易读，特别是在循环和累加操作中。例如：
                                     <div class="code-block" style="margin-top: 0.5rem; font-size: 0.85rem;">
-                                        <span class="code-comment">// 使用 += 更简洁</span><br>
-                                        total <span class="code-operator">+=</span> value;<br><br>
-                                        <span class="code-comment">// 比下面的写法更好</span><br>
-                                        total <span class="code-operator">=</span> total <span class="code-operator">+</span> value;
+// 使用 += 更简洁
+total += value;
+
+// 比下面的写法更好
+total = total + value;
                                     </div>
                                 </div>
                                 
@@ -1024,43 +1002,6 @@
                     }, 2000);
                 }
             });
-            
-                // 增强的语法高亮函数
-                function highlightCodeBlocks() {
-                    const codeBlocks = document.querySelectorAll('.code-block');
-                    
-                    codeBlocks.forEach(block => {
-                        // 获取原始文本内容（已转义的）
-                        let code = block.textContent;
-                        
-                        // 解码HTML实体（将 &lt; 转回 < 等）
-                        const textarea = document.createElement('textarea');
-                        textarea.innerHTML = code;
-                        code = textarea.value;
-                        
-                        // 现在进行语法高亮替换
-                        code = code.replace(/&lt;\/?span[^&gt;]*&gt;/g, ''); // 清理可能残留的span标签
-                        
-                        // 高亮规则（按顺序执行）
-                        code = code.replace(/\/\/[^\n]*/g, '<span class="code-comment">$&</span>');
-                        code = code.replace(/\b(int|char|for|if|else|return|while|do|switch|case|break|continue|void|float|double|short|long|unsigned|signed|const|static|extern|volatile|typedef|struct|enum|union|goto|sizeof)\b/g, '<span class="code-keyword">$&</span>');
-                        code = code.replace(/\b(printf|scanf|strcpy|strcat|strlen|strcmp|malloc|free|sizeof|main)\b(?=\s*\()/g, '<span class="code-function">$&</span>');
-                        code = code.replace(/\b\d+\b/g, '<span class="code-number">$&</span>');
-                        code = code.replace(/"[^"]*"/g, '<span class="code-string">$&</span>');
-                        code = code.replace(/(\+=|\-=|\*=|\/=|%=|\+\+|\-\-|==|!=|<=|>=|&=|\|=|\^=|&&|\|\||[+\-*\/%=&|^<>!])/g, '<span class="code-operator">$&</span>');
-                        
-                        // 重新编码<和>，防止被解析为HTML标签
-                        code = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                        
-                        // 将换行符转换为<br>
-                        code = code.replace(/\n/g, '<br>');
-                        
-                        // 更新内容
-                        block.innerHTML = code;
-                    });
-                }
-            
-            highlightCodeBlocks();
             
             // 控制台提示
             console.log('文件后缀名与C语言教程页面已加载');
