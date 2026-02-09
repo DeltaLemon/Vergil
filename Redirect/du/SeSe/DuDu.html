@@ -295,6 +295,47 @@
             max-height: 2000px;
         }
         
+        /* 为第三个步骤（+=运算符解析）添加垂直滚动 */
+        #step3 .step-content.expanded {
+            padding: 2rem;
+            max-height: 70vh; /* 设置固定高度 */
+            overflow-y: auto; /* 添加垂直滚动条 */
+        }
+        
+        /* 滚动条样式 */
+        #step3 .step-content.expanded::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #step3 .step-content.expanded::-webkit-scrollbar-track {
+            background: var(--bg-light);
+            border-radius: 4px;
+        }
+        
+        #step3 .step-content.expanded::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        #step3 .step-content.expanded::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* 滚动指示器提示 */
+        .scroll-indicator {
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to bottom, transparent, var(--primary-light) 70%);
+            padding: 1.5rem 0 0.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--primary-color);
+            font-weight: 500;
+            display: none; /* 默认隐藏，通过JS控制显示 */
+        }
+        
         /* 步骤内设备切换 */
         .device-selector {
             display: flex;
@@ -410,20 +451,7 @@
             font-size: 1rem;
         }
         
-        /* 代码块容器 - 添加横向滚动支持 */
-        .code-container {
-            position: relative;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-        
-        .code-scroll-wrapper {
-            position: relative;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-bottom: 10px; /* 为滚动条留空间 */
-        }
-        
+        /* 代码块样式 - 删除所有横向滚动相关样式 */
         .code-block {
             background-color: var(--code-bg);
             color: var(--code-text);
@@ -432,40 +460,12 @@
             font-family: 'Courier New', monospace;
             font-size: 0.95rem;
             line-height: 1.5;
-            min-width: min-content;
-            white-space: pre;
+            margin: 1rem 0;
             border: 1px solid var(--border-color);
-        }
-        
-        /* 滑动条样式 */
-        .scroll-indicator {
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-        
-        .scroll-hint {
-            display: none;
-            position: absolute;
-            bottom: 5px;
-            left: 5px;
-            background: rgba(79, 70, 229, 0.8);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-        }
-        
-        /* 当内容溢出时显示滑动提示 */
-        .code-container.overflowing .scroll-hint {
-            display: block;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            width: 100%;
+            overflow-x: visible;
         }
         
         /* 语言示例网格 */
@@ -567,9 +567,8 @@
                 grid-template-columns: 1fr;
             }
             
-            .code-block {
-                white-space: pre-wrap; /* 在移动端允许换行 */
-                min-width: auto;
+            #step3 .step-content.expanded {
+                max-height: 60vh; /* 移动端调整高度 */
             }
         }
     </style>
@@ -799,9 +798,7 @@
                                 
                                 <div class="code-section">
                                     <h4>C语言基本语法</h4>
-                                    <div class="code-container">
-                                        <div class="code-scroll-wrapper">
-                                            <div class="code-block">
+                                    <div class="code-block">
 // 基本语法
 变量 += 表达式;
 
@@ -818,10 +815,6 @@ for(int i = 1; i &lt;= 10; i++) {
     sum += i; // 将i的值加到sum上
 }
 // 循环结束后，sum = 1+2+...+10 = 55
-                                            </div>
-                                            <div class="scroll-indicator">⇄ 滑动查看</div>
-                                            <div class="scroll-hint">可滑动查看更多内容</div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -838,9 +831,7 @@ for(int i = 1; i &lt;= 10; i++) {
                                             <span class="language-icon">🐍</span>
                                             <h5>Python</h5>
                                         </div>
-                                        <div class="code-container">
-                                            <div class="code-scroll-wrapper">
-                                                <div class="code-block">
+                                        <div class="code-block">
 # Python中 += 运算符
 # 数值运算
 x = 10
@@ -856,10 +847,6 @@ numbers += [4, 5]  # numbers 现在为 [1, 2, 3, 4, 5]
 
 # 注意：Python中的字符串是不可变的
 # text += "!" 会创建新的字符串对象
-                                                </div>
-                                                <div class="scroll-indicator">⇄</div>
-                                                <div class="scroll-hint">可滑动</div>
-                                            </div>
                                         </div>
                                     </div>
                                     
@@ -868,9 +855,7 @@ numbers += [4, 5]  # numbers 现在为 [1, 2, 3, 4, 5]
                                             <span class="language-icon">☕</span>
                                             <h5>Java</h5>
                                         </div>
-                                        <div class="code-container">
-                                            <div class="code-scroll-wrapper">
-                                                <div class="code-block">
+                                        <div class="code-block">
 // Java中 += 运算符
 // 数值运算
 int x = 10;
@@ -889,10 +874,6 @@ sb.append(" World");  // 推荐使用append而不是+=
 byte b = 10;
 b += 5;  // 正确，等价于 b = (byte)(b + 5)
 // b = b + 5;  // 错误，需要显式类型转换
-                                                </div>
-                                                <div class="scroll-indicator">⇄</div>
-                                                <div class="scroll-hint">可滑动</div>
-                                            </div>
                                         </div>
                                     </div>
                                     
@@ -901,9 +882,7 @@ b += 5;  // 正确，等价于 b = (byte)(b + 5)
                                             <span class="language-icon">🟨</span>
                                             <h5>JavaScript</h5>
                                         </div>
-                                        <div class="code-container">
-                                            <div class="code-scroll-wrapper">
-                                                <div class="code-block">
+                                        <div class="code-block">
 // JavaScript中 += 运算符
 // 数值运算
 let x = 10;
@@ -926,10 +905,6 @@ arr += [3, 4];  // 注意：这会转换为字符串 "1,23,4"
 let name = "Alice";
 let greeting = "Hello, ";
 greeting += `${name}!`;  // greeting 现在为 "Hello, Alice!"
-                                                </div>
-                                                <div class="scroll-indicator">⇄</div>
-                                                <div class="scroll-hint">可滑动</div>
-                                            </div>
                                         </div>
                                     </div>
                                     
@@ -938,9 +913,7 @@ greeting += `${name}!`;  // greeting 现在为 "Hello, Alice!"
                                             <span class="language-icon">🦀</span>
                                             <h5>C++</h5>
                                         </div>
-                                        <div class="code-container">
-                                            <div class="code-scroll-wrapper">
-                                                <div class="code-block">
+                                        <div class="code-block">
 // C++中 += 运算符
 // 数值运算（与C相同）
 int x = 10;
@@ -967,10 +940,6 @@ Vector v1{1, 2}, v2{3, 4};
 v1 += v2;  // v1 现在为 {4, 6}
 
 // 注意：C++中的字符数组不能直接使用+=
-                                                </div>
-                                                <div class="scroll-indicator">⇄</div>
-                                                <div class="scroll-hint">可滑动</div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -982,9 +951,7 @@ v1 += v2;  // v1 现在为 {4, 6}
                                     不同语言中"+="运算符的行为差异总结：
                                 </p>
                                 
-                                <div class="code-container">
-                                    <div class="code-scroll-wrapper">
-                                        <div class="code-block">
+                                <div class="code-block">
 // 语言对比表 - += 运算符的行为差异
 
 // 1. 字符串连接支持
@@ -1011,10 +978,6 @@ v1 += v2;  // v1 现在为 {4, 6}
 // - 字符串连接：注意语言特性和性能
 // - 循环中使用：考虑使用其他方法（如StringBuilder、join等）
 // - 类型安全：注意隐式类型转换
-                                        </div>
-                                        <div class="scroll-indicator">⇄</div>
-                                        <div class="scroll-hint">可滑动</div>
-                                    </div>
                                 </div>
                                 
                                 <div class="warning-box">
@@ -1029,6 +992,11 @@ v1 += v2;  // v1 现在为 {4, 6}
                                     3. 在循环中大量拼接字符串时，考虑使用更高效的替代方案<br>
                                     4. 注意类型安全和隐式转换规则
                                 </div>
+                            </div>
+                            
+                            <!-- 滚动提示 -->
+                            <div class="scroll-indicator" id="step3ScrollIndicator">
+                                ↓ 滚动查看更多内容
                             </div>
                         </div>
                     </div>
@@ -1104,6 +1072,13 @@ v1 += v2;  // v1 现在为 {4, 6}
                         document.querySelectorAll('.tutorial-nav a').forEach(link => link.classList.remove('active'));
                         navLink.classList.add('active');
                     }
+                    
+                    // 如果是第三步，添加滚动事件监听
+                    if (stepNumber === '3' && isExpanding) {
+                        setTimeout(() => {
+                            setupStep3Scroll();
+                        }, 100);
+                    }
                 });
             });
             
@@ -1166,6 +1141,13 @@ v1 += v2;  // v1 现在为 {4, 6}
                             content.classList.add('expanded');
                             if (toggleBtn) toggleBtn.textContent = '▼';
                             targetCard.classList.add('active');
+                            
+                            // 如果是第三步，添加滚动事件监听
+                            if (targetId === '#step3') {
+                                setTimeout(() => {
+                                    setupStep3Scroll();
+                                }, 100);
+                            }
                         }
                     }
                 });
@@ -1186,37 +1168,57 @@ v1 += v2;  // v1 现在为 {4, 6}
                 }
             });
             
-            // 检测代码块是否需要滑动条
-            function checkCodeOverflow() {
-                const codeContainers = document.querySelectorAll('.code-container');
+            // 为第三步设置滚动功能
+            function setupStep3Scroll() {
+                const step3Content = document.querySelector('#step3 .step-content.expanded');
+                const scrollIndicator = document.getElementById('step3ScrollIndicator');
                 
-                codeContainers.forEach(container => {
-                    const scrollWrapper = container.querySelector('.code-scroll-wrapper');
-                    const codeBlock = container.querySelector('.code-block');
+                if (!step3Content || !scrollIndicator) return;
+                
+                // 检查是否需要滚动指示器
+                const checkScrollNeeded = () => {
+                    const isScrollable = step3Content.scrollHeight > step3Content.clientHeight;
                     
-                    if (scrollWrapper && codeBlock) {
-                        // 检查内容是否超出容器宽度
-                        const isOverflowing = codeBlock.scrollWidth > scrollWrapper.clientWidth;
+                    if (isScrollable) {
+                        scrollIndicator.style.display = 'block';
                         
-                        if (isOverflowing) {
-                            container.classList.add('overflowing');
-                        } else {
-                            container.classList.remove('overflowing');
-                        }
+                        // 监听滚动事件
+                        step3Content.addEventListener('scroll', function() {
+                            const scrollRemaining = this.scrollHeight - this.scrollTop - this.clientHeight;
+                            
+                            // 滚动到底部时隐藏指示器
+                            if (scrollRemaining < 50) {
+                                scrollIndicator.style.opacity = '0';
+                            } else {
+                                scrollIndicator.style.opacity = '1';
+                            }
+                        });
+                    } else {
+                        scrollIndicator.style.display = 'none';
                     }
-                });
+                };
+                
+                // 初始检查
+                checkScrollNeeded();
+                
+                // 窗口大小变化时重新检查
+                window.addEventListener('resize', checkScrollNeeded);
             }
             
-            // 初始检查和窗口大小变化时重新检查
-            checkCodeOverflow();
-            window.addEventListener('resize', checkCodeOverflow);
+            // 如果第三步已经展开，设置滚动功能
+            const step3Expanded = document.querySelector('#step3 .step-content.expanded');
+            if (step3Expanded) {
+                setTimeout(() => {
+                    setupStep3Scroll();
+                }, 100);
+            }
             
             // 控制台提示
             console.log('文件后缀名与+=运算符教程页面已加载');
             console.log('使用提示：');
             console.log('1. 替换外部链接：找到id="externalLink"的a标签，修改href属性');
-            console.log('2. 代码块支持横向滑动查看');
-            console.log('3. 可在语言示例部分添加更多编程语言');
+            console.log('2. 第三步内容支持垂直滚动浏览');
+            console.log('3. 代码块已横向铺满容器，无横向滑动条');
         });
     </script>
 </body>
